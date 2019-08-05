@@ -31,7 +31,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         self.storyHeaderCollectionView.reloadData()
         
-        
         let layout = storyDetailCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize.init(width: screenWidth, height: screenHeight)
         

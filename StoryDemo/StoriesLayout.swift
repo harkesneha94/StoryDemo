@@ -16,8 +16,8 @@ struct StoryHeaderCellSizes {
     }
     
     struct Height {
-        static let featuredCellHeight: CGFloat = screenWidth/2
-        static let standardCellHeight: CGFloat = screenWidth/4
+        static let featuredCellHeight: CGFloat = 100
+        static let standardCellHeight: CGFloat = 70
     }
 }
 
@@ -70,28 +70,44 @@ extension StoriesLayout {
         
         let standardWidth = StoryHeaderCellSizes.Width.standardCellWidth
         let featuredWidth = StoryHeaderCellSizes.Width.featuredCellWidth
-
+        
+        let standardHeight = StoryHeaderCellSizes.Height.standardCellHeight
+        let featuredHeight = StoryHeaderCellSizes.Height.featuredCellHeight
+        
         var frame = CGRect.zero
         var x: CGFloat = 0
-
+        
         for item in 0..<numberOfItems {
             let indexPath = IndexPath(item: item, section: 0)
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            // Important because each cell has to slide over the top of the previous one
-            // Initially set the width and height of the cell to the standard width and standard height.
+            
+            // Initially set the width & height of the cell to the standard width & height
             var width = standardWidth
+            var heightt = StoryHeaderCellSizes.Height.standardCellHeight
+            attributes.alpha = 0.5
+            
             if indexPath.item == featuredItemIndex {
                 // The featured cell
-                let xOffset = standardWidth * nextItemPercentageOffset
-                x = collectionView!.contentOffset.x - xOffset
-                width = featuredWidth
+                attributes.alpha = 1
+                if nextItemPercentageOffset > 0 {
+                    width = featuredWidth - max((standardWidth) * nextItemPercentageOffset, 0)
+                    heightt = featuredHeight - max((standardHeight) * nextItemPercentageOffset, 0)
+                    x = collectionView!.contentOffset.x - max(nextItemPercentageOffset, 0)
+                } else {
+                    let xOffset = standardWidth * nextItemPercentageOffset
+                    x = collectionView!.contentOffset.x - xOffset
+                    width = featuredWidth
+                    heightt = featuredHeight
+                }
             } else if indexPath.item == (featuredItemIndex + 1) && indexPath.item != numberOfItems {
-                // The cell directly side of the featured cell, which grows as the user scrolls
+                // The cell directly below the featured cell, which grows as the user scrolls
                 let maxX = x + standardWidth
                 width = standardWidth + max((featuredWidth - standardWidth) * nextItemPercentageOffset, 0)
+                heightt = standardHeight + max((featuredHeight-standardHeight) * nextItemPercentageOffset, 0)
                 x = maxX - width
+                attributes.alpha = 0.5
             }
-            frame = CGRect(x: x, y: 0, width: width, height: height)
+            frame = CGRect(x: x, y: 0, width: width, height: heightt)
             attributes.frame = frame
             cache.append(attributes)
             x = frame.maxX
