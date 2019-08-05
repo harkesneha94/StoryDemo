@@ -20,16 +20,6 @@ class StoryHeaderCollectionViewCell: UICollectionViewCell {
     override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
         super.apply(layoutAttributes)
         
-        let featuredHeight = CGFloat(50)
-        let standardHeight = CGFloat(50)
-        
-        let delta = 1 - ((featuredHeight - CGFloat(50)) / (featuredHeight - standardHeight))
-        print("-------\(delta)")
-        let scale = max(delta, 1.0)
-        
-        backView.transform = CGAffineTransform(scaleX: scale, y: scale)
-       // backView.alpha = delta
-        
     }
     
 }

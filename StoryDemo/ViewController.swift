@@ -36,13 +36,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         layout.itemSize = CGSize.init(width: screenWidth, height: screenHeight)
         
         self.storyDetailCollectionView.reloadData()
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            UIView.animate(withDuration: 0.5, animations: {
-//                self.storyHeaderCollectionView.contentOffset.x = 200.0
-//            })
-//        }
-        
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -71,10 +64,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == storyDetailCollectionView {
             self.storyHeaderCollectionView.contentOffset.x = self.storyDetailCollectionView.contentOffset.x/4
-
-            print("-----------------------------------------")
-            print("-----------\(self.storyDetailCollectionView.contentOffset.x)")
-            print("-----------\(self.storyHeaderCollectionView.contentOffset.x)")
         }
     }
     

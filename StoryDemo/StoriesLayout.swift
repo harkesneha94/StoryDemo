@@ -10,9 +10,14 @@ import Foundation
 import UIKit
 
 struct StoryHeaderCellSizes {
-    struct Cell  {
+    struct Width  {
         static let featuredCellWidth: CGFloat = screenWidth/2
         static let standardCellWidth: CGFloat = screenWidth/4
+    }
+    
+    struct Height {
+        static let featuredCellHeight: CGFloat = screenWidth/2
+        static let standardCellHeight: CGFloat = screenWidth/4
     }
 }
 
@@ -63,8 +68,8 @@ extension StoriesLayout {
     override func prepare() {
         cache.removeAll(keepingCapacity: false)
         
-        let standardWidth = StoryHeaderCellSizes.Cell.standardCellWidth
-        let featuredWidth = StoryHeaderCellSizes.Cell.featuredCellWidth
+        let standardWidth = StoryHeaderCellSizes.Width.standardCellWidth
+        let featuredWidth = StoryHeaderCellSizes.Width.featuredCellWidth
 
         var frame = CGRect.zero
         var x: CGFloat = 0
@@ -73,8 +78,7 @@ extension StoriesLayout {
             let indexPath = IndexPath(item: item, section: 0)
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             // Important because each cell has to slide over the top of the previous one
-            attributes.zIndex = item
-            // Initially set the width of the cell to the standard height
+            // Initially set the width and height of the cell to the standard width and standard height.
             var width = standardWidth
             if indexPath.item == featuredItemIndex {
                 // The featured cell
@@ -82,7 +86,7 @@ extension StoriesLayout {
                 x = collectionView!.contentOffset.x - xOffset
                 width = featuredWidth
             } else if indexPath.item == (featuredItemIndex + 1) && indexPath.item != numberOfItems {
-                // The cell directly below the featured cell, which grows as the user scrolls
+                // The cell directly side of the featured cell, which grows as the user scrolls
                 let maxX = x + standardWidth
                 width = standardWidth + max((featuredWidth - standardWidth) * nextItemPercentageOffset, 0)
                 x = maxX - width
@@ -92,12 +96,6 @@ extension StoriesLayout {
             cache.append(attributes)
             x = frame.maxX
         }
-    }
-    
-    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        let itemIndex = round(proposedContentOffset.x / dragOffSet)
-        let xOffset = itemIndex * dragOffSet
-        return CGPoint(x: xOffset, y: 0)
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
